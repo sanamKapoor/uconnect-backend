@@ -43,6 +43,7 @@ exports.register = async (req, res, next) => {
             return next(error)
         }
 
+        console.log(img.path)
         const imgUrl = await uploadImage(img.path, 'uconnect-users');
         if(!imgUrl){
             const error = new HttpError('Unable to create account', 500);
