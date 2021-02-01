@@ -17,8 +17,8 @@ const db = require('./config/db');
 db(server);
 
 app.use(cors({ credentials: true }));
-app.use(express.urlencoded({ extended: false }))
-// app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
 app.use('/backend/uploads', express.static('./backend/uploads'))
 app.use(passport.initialize());
 
