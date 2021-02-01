@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors')({origin: true});
 const passport = require('passport');
 
 require('dotenv').config();
