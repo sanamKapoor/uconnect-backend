@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-const cors = require('cors')({origin: true});
+const cors = require('cors');
 const passport = require('passport');
 
 require('dotenv').config();
@@ -16,7 +16,7 @@ const server = app.listen(PORT, () => console.log(`Server is running on port : $
 const db = require('./config/db');
 db(server);
 
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use('/backend/uploads', express.static('./backend/uploads'))
