@@ -25,7 +25,7 @@ exports.register = async (req, res, next) => {
             const error = new HttpError('Please provide all the fields', 500);
             return next(error)
         }
-
+        console.log(req.file)
         const img = req.file;
         if(!img){
             const error = new HttpError('Please provide profile picture', 500);
