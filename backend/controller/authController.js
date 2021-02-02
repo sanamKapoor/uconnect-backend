@@ -59,7 +59,7 @@ exports.register = async (req, res, next) => {
         });
 
         await user.save();
-        fs.unlink(img.path, err => console.log(err));
+        user.imgId && fs.unlink(img.path, err => console.log(err));
 
         res.status(200).json({ msg: 'Account Created!' });
 
