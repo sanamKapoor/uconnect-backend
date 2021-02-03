@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { validationResult } = require('express-validator');
 const HttpError = require('../middleware/error');
 const User = require('../model/User');
@@ -9,8 +8,6 @@ require('dotenv').config();
 // const sgMail = require('@sendgrid/mail');
 // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const { uploadImage } = require('../middleware/cloudinary');
-
 exports.register = async (req, res, next) => {
     try {
         const errors = validationResult(req);
@@ -20,20 +17,9 @@ exports.register = async (req, res, next) => {
             return next(error)
         }
 
-        const { username, email, password } = req.body;
-        if(!username || !email || !password){
+        const { username, email, password, image, imgId } = req.body;
+        if(!username || !email || !password || !image || !imgId){
             const error = new HttpError('Please provide all the fields', 500);
-            return next(error)
-        }
-
-        const img = req.file;
-        if(!img){
-            const error = new HttpError('Please provide profile picture', 500);
-            return next(error)
-        }
-
-        if(img.mimetype !== 'image/jpg' && img.mimetype !== 'image/jpeg' && img.mimetype !== 'image/png'){
-            const error = new HttpError("Only image file accepted", 500);
             return next(error)
         }
 
@@ -43,9 +29,8 @@ exports.register = async (req, res, next) => {
             return next(error)
         }
 
-        const imgUrl = await uploadImage(img.path, 'uconnect-users');
-        if(!imgUrl){
-            const error = new HttpError('Unable to create account', 500);
+        if(image === '' || imgId === ''){
+            const error = new HttpError("Can't create account", 500);
             return next(error)
         }
 
@@ -54,13 +39,11 @@ exports.register = async (req, res, next) => {
             email,
             username,
             password: hasedPassword,
-            image: imgUrl.secure_url,
-            imgId: imgUrl.public_id
+            image,
+            imgId
         });
 
         await user.save();
-        user.imgId && fs.unlink(img.path, err => console.log(err));
-
         res.status(200).json({ msg: 'Account Created!' });
 
         // const token = jwt.sign({user}, process.env.SECRET, { expiresIn : process.env.MAIL_TOKEN_EXP_TIME })

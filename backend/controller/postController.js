@@ -1,9 +1,7 @@
-const fs = require('fs');
-const path = require('path');
 const io = require('../socket');
 const HttpError = require('../middleware/error');
 const { validationResult } = require('express-validator');
-const { uploadImage, destroyMedia } = require('../middleware/cloudinary');
+const { destroyMedia } = require('../middleware/cloudinary');
 
 const User = require('../model/User');
 const Post = require('../model/Post');
@@ -112,35 +110,19 @@ exports.createPost = async (req, res, next) => {
             return next(error)
         }
 
-        const media = req.file;
-        if(!media){
-            const error = new HttpError("Please provide media file", 500);
+        if(req.body.mediaFile.filePath === '' || req.body.mediaFile.filePath === undefined){
+            const error = new HttpError("Please provide image file", 500);
             return next(error)
-        }
-
-        let mediaUrl = await uploadImage(media.path, 'uconnect-media');
-
-        if(!mediaUrl){
-            const error = new HttpError('Unable to create post', 500);
-            return next(error)
-        }
-
-        const mediaFile = {
-            mediaId: mediaUrl.public_id,
-            fileName: media.filename,
-            filePath: mediaUrl.secure_url,
         }
 
         const post = new Post({
             caption: req.body.caption,
-            mediaFile: mediaFile,
+            mediaFile: req.body.mediaFile,
             creator: user
         });
         await post.save();
         await user.posts.push(post);
         await user.save();
-
-        fs.unlink(media.path, err => console.log(err));
 
         res.status(201).json({ msg: 'Post Created' })
     } catch (error) {
@@ -200,31 +182,15 @@ exports.updatePostMedia = async (req, res, next) => {
             return next(error)
         }
 
-        const media = req.file;
-        if(!media){
-            const error = new HttpError("Please provide media file", 500);
-            return next(error)
-        }
-
         post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId);
 
-        let mediaUrl = await uploadImage(media.path, 'uconnect-media');
-
-        if(!mediaUrl){
-            const error = new HttpError('Unable to update post', 500);
+        if(req.body.mediaFile.filePath === '' || req.body.mediaFile.filePath === undefined){
+            const error = new HttpError("Please provide image file", 500);
             return next(error)
         }
-
-        const mediaFile = {
-            mediaId: mediaUrl.public_id,
-            fileName: media.filename,
-            filePath: mediaUrl.secure_url
-        }
-
-        post.mediaFile = mediaFile;
+        
+        post.mediaFile = req.body.mediaFile;
         await post.save();
-
-        fs.unlink(media.path, err => console.log(err));
 
         res.status(200).json({ msg: 'Post Media Updated'})
     } catch (error) {

@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const passport = require('passport');
 const { check } = require('express-validator');
-const fileUploadFun = require('../middleware/fileUpload');
 const { register, login, accountVerification, forgetPassword, resetPassword } = require('../controller/authController');
+const { uploadImage } = require('../middleware/cloudinary');
 require('dotenv').config();
 
 //  Authentication with Google OAuth
@@ -27,11 +27,11 @@ router.post('/login',
 login);
 
 router.post('/register', 
-fileUploadFun('uploads/user-images').single('image'),
 [
     check('username').not().isEmpty().not().isNumeric().trim().withMessage('Please enter valid username'),
     check('email').isEmail().normalizeEmail().withMessage('Please enter a valid email'),
-    check('password').isLength({ min: 5 }).withMessage('Password must be at least 5 chars long')
+    check('password').isLength({ min: 5 }).withMessage('Password must be at least 5 chars long'),
+    check('image').not().isEmpty().withMessage('Please provide profile picture')
 ],
 register)
 

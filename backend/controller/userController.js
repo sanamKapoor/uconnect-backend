@@ -1,8 +1,7 @@
-const fs = require('fs');
 const io = require('../socket');
 const HttpError = require('../middleware/error');
 const { validationResult } = require('express-validator');
-const { uploadImage, destroyMedia } = require('../middleware/cloudinary');
+const { destroyMedia } = require('../middleware/cloudinary');
 
 const User = require('../model/User');
 const Post = require('../model/Post');
@@ -65,31 +64,16 @@ exports.updateProfilePic = async (req, res, next) => {
             next(error);
         }
 
-        const media = req.file;
-
-        if(!media){
-            const error = new HttpError("Please provide image", 500);
-            return next(error)
+        user.imgId && await destroyMedia(user.imgId)
+        const { img_url, img_id } = req.body;
+        if(img_id === '' || img_url === ''){
+            const error = new HttpError("Can't update profile picture", 403);
+            next(error);
         }
 
-        if(media.mimetype !== 'image/jpg' && media.mimetype !== 'image/jpeg' && media.mimetype !== 'image/png'){
-            const error = new HttpError("Only image file accepted", 500);
-            return next(error)
-        }
-
-
-        user.imgId && await destroyMedia(user.imgId);
-        const imgUrl = await uploadImage(media.path, 'uconnect-users');
-        if(!imgUrl){
-            const error = new HttpError("Can't update image", 500);
-            return next(error)
-        }
-
-        user.image = imgUrl.secure_url;
-        user.imgId = imgUrl.public_id;
+        user.image = img_url;
+        user.imgId = img_id;
         await user.save();
-
-        fs.unlink(req.file.path, err => console.log(err));
 
         io.getIO().emit('users', { action: 'GetUser', user: user, otherUser: null })
         res.status(200).json({ msg: 'User Image Updated'})
@@ -150,7 +134,7 @@ exports.deleteUser = async (req, res, next) => {
             }
         }
 
-        await destroyMedia(user.imgId);
+        user.imgId && await destroyMedia(user.imgId);
 
         await user.remove();
         res.status(200).json({ msg: 'User Deleted'})

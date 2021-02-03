@@ -8,18 +8,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-exports.uploadImage = async (path, preset) => {
-    try {
-        const res = await cloudinary.uploader.upload(path, {
-            upload_preset: preset,
-        });
-    
-        return res;
-    } catch (error) {
-        next(new HttpError('Server Error', 500))
-    } 
-}
-
 exports.destroyMedia = async (id) => {
     try {
         await cloudinary.uploader.destroy(id);

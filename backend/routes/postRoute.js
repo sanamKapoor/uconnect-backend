@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { check } = require('express-validator');
-const fileUploadFun = require('../middleware/fileUpload');
 
 const { getPosts, getPost, getPostByUser, getPostsForHome, deletePost, createPost, likePost, postComment, deleteComment, updatePostCaption, updatePostMedia, deleteCommentFromMyPost } = require('../controller/postController');
 
@@ -21,7 +20,6 @@ router.delete('/:postId/:userId/delete', deletePost);
 
 //  Create Post
 router.post('/create', 
-fileUploadFun('uploads/media').single('mediaFile'),
 [
     check('caption').not().isEmpty().not().isNumeric().trim().withMessage('Please enter valid caption').isLength({ max: 200 }).withMessage('Caption should not be very large')
 ],
@@ -35,7 +33,7 @@ router.patch('/:postId/update-caption',
 updatePostCaption)
 
 //  Update Post Media
-router.patch('/:postId/update-media', fileUploadFun('uploads/media').single('mediaFile'), updatePostMedia);
+router.patch('/:postId/update-media', updatePostMedia);
 
 //  Like-UnLike a Post
 router.post('/:postId/:userId/like-unlike', likePost);

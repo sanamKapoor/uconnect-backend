@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { check } = require('express-validator');
-const fileUploadFun = require('../middleware/fileUpload');
 
 const { updateProfilePic, getUsers, getUser, getUserByName, deleteUser, writeAboutUser, deleteAboutUser, connectUser, blockUser } = require('../controller/userController');
 
@@ -17,7 +16,7 @@ router.get('/username/:username', getUserByName);
 router.delete('/:userId', deleteUser);
 
 //  Update Profile Pic
-router.post('/:userId/update-image', fileUploadFun('uploads/user-images').single('image'), updateProfilePic)
+router.post('/:userId/update-image', updateProfilePic)
 
 //  Create About Section
 router.patch('/about/:userId',
