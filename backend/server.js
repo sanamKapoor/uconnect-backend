@@ -1,6 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const passport = require('passport');
 
 require('dotenv').config();
@@ -27,20 +27,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((error, req, res, next) => {
-    if(req.file){
-        console.log("file -", req.file)
-        fs.unlink(req.file.path, err => {
-            console.log(err)
-        })
-    }
-    if(res.headerSent){
-        return next(error)
-    }
-    res.status(error.code || 500).json({ message: error.message || 'Server Error!' })
-})
-
-app.use(cors({ credentials: true }));
+// app.use(cors({ credentials: true }));
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use('/backend/uploads', express.static('./backend/uploads'))
