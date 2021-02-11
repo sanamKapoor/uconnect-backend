@@ -87,7 +87,6 @@ exports.getPostsForHome = async (req, res, next) => {
             return next(error)
         }
 
-        // io.getIO().emit('posts', { action: 'GetAllPosts', posts: posts })
         res.status(200).json({ msg: 'Posts for home page', posts: AllPosts })
     } catch (error) {
         return next(new HttpError('Server Error', 500))
@@ -182,13 +181,13 @@ exports.updatePostMedia = async (req, res, next) => {
             return next(error)
         }
 
-        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId);
-
         if(req.body.mediaFile.filePath === '' || req.body.mediaFile.filePath === undefined){
             const error = new HttpError("Please provide image file", 500);
             return next(error)
         }
         
+        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId);
+
         post.mediaFile = req.body.mediaFile;
         await post.save();
 

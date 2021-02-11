@@ -1,4 +1,3 @@
-const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const passport = require('passport');
@@ -19,7 +18,6 @@ db(server);
 app.use(cors({ credentials: true }));
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
-app.use('/backend/uploads', express.static('./backend/uploads'))
 app.use(passport.initialize());
 
 require('./config/passport-jwt');

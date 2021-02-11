@@ -2,7 +2,6 @@ const router = require('express').Router();
 const passport = require('passport');
 const { check } = require('express-validator');
 const { register, login, accountVerification, forgetPassword, resetPassword } = require('../controller/authController');
-const { uploadImage } = require('../middleware/cloudinary');
 require('dotenv').config();
 
 //  Authentication with Google OAuth
