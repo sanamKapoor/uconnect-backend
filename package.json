@@ -37,6 +37,6 @@
   "engines": {
     "node": "0.16.13",
     "npm": "1.8.1"
-  }
+  },
   "resolutions": { "fs-capacitor": "3.0.0" }
 }
