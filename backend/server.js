@@ -32,6 +32,8 @@ require('./config/passport-jwt');
 require('./config/passport-google');
 
 // Routes
+app.use('/test', (res, res) => res.json({ msg: 'hlo'}))
+
 app.use('/auth', require('./routes/authRoute'));
 
 app.use(passport.authenticate('jwt', { session: false }));
