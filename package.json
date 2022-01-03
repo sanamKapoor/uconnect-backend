@@ -35,8 +35,8 @@
     "nodemon": "^2.0.4"
   },
   "engines": {
-    "node": "6.11.1",
-    "npm": "1.8.1"
+    "node": "12.x",
+    "npm": "6.x"
   },
   "resolutions": { "fs-capacitor": "3.0.0" }
 }
