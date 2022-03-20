@@ -64,7 +64,7 @@ exports.updateProfilePic = async (req, res, next) => {
             next(error);
         }
 
-        user.imgId && await destroyMedia(user.imgId)
+        user.imgId && await destroyMedia(user.imgId, next)
         const { img_url, img_id } = req.body;
         if(img_id === '' || img_url === ''){
             const error = new HttpError("Can't update profile picture", 403);
@@ -96,7 +96,7 @@ exports.deleteUser = async (req, res, next) => {
         const posts = await Post.find({ creator: user._id });
         if(posts.length > 0){
             for(let post of posts){
-                post.mediaFile.mediaId && await destroyMedia(post.mediaFile.mediaId)
+                post.mediaFile.mediaId && await destroyMedia(post.mediaFile.mediaId, next)
                 await post.remove();
             }
         }
@@ -134,7 +134,7 @@ exports.deleteUser = async (req, res, next) => {
             }
         }
 
-        user.imgId && await destroyMedia(user.imgId);
+        user.imgId && await destroyMedia(user.imgId, next);
 
         await user.remove();
         res.status(200).json({ msg: 'User Deleted'})

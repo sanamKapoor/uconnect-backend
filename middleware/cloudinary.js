@@ -8,7 +8,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-exports.destroyMedia = async (id) => {
+exports.destroyMedia = async (id, next) => {
     try {
         await cloudinary.uploader.destroy(id);
     } catch (error) {

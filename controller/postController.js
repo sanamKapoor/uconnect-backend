@@ -186,7 +186,7 @@ exports.updatePostMedia = async (req, res, next) => {
             return next(error)
         }
         
-        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId);
+        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId, next);
 
         post.mediaFile = req.body.mediaFile;
         await post.save();
@@ -216,7 +216,7 @@ exports.deletePost = async (req, res, next) => {
         }
 
 
-        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId);
+        post.mediaFile.mediaId && destroyMedia(post.mediaFile.mediaId, next);
         await post.remove();
 
         const creator = await User.findById(userId);
