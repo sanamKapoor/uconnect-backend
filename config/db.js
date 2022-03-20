@@ -3,7 +3,7 @@ require('dotenv').config();
 
 module.exports = async (server) => {
     try {
-        await mongoose.connect("mongodb://localhost/uconnect")
+        await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true})
 
         console.log('DB Connect');
         const io = require('../socket').init(server);
