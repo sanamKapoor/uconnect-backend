@@ -186,7 +186,9 @@ exports.updatePostMedia = async (req, res, next) => {
             return next(error)
         }
         
-        post.mediaFile.mediaId && await destroyMedia(post.mediaFile.mediaId, next);
+        let deleted = false;
+        if(post.mediaFile.mediaId) deleted = await destroyMedia(post.mediaFile.mediaId, next);
+        !deleted && new HttpError("Something went wrong", 500) 
 
         post.mediaFile = req.body.mediaFile;
         await post.save();
@@ -216,7 +218,10 @@ exports.deletePost = async (req, res, next) => {
         }
 
 
-        post.mediaFile.mediaId && await destroyMedia(post.mediaFile.mediaId, next);
+        let deleted = false;
+        if(post.mediaFile.mediaId) deleted = await destroyMedia(post.mediaFile.mediaId, next);
+        !deleted && new HttpError("Something went wrong", 500) 
+        
         await post.remove();
 
         const creator = await User.findById(userId);
