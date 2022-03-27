@@ -12,9 +12,10 @@ exports.destroyMedia = async (id, next) => {
     try {
         console.log('ID -----', id);
         await cloudinary.uploader.destroy(id, { invalidate: true, resource_type: "image" }, result => {
-            console.log(result);
+            console.log('result ----', result);
         });
     } catch (error) {
+        console.log('error ------', error);
         next(new HttpError('Server Error', 500))
     }
 }
