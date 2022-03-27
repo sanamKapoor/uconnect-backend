@@ -10,6 +10,7 @@ cloudinary.config({
 
 exports.destroyMedia = async (id, next) => {
     try {
+        console.log('ID -----', id);
         await cloudinary.uploader.destroy(id);
     } catch (error) {
         next(new HttpError('Server Error', 500))
