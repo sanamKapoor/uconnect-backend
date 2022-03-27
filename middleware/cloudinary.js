@@ -11,7 +11,7 @@ cloudinary.config({
 exports.destroyMedia = async (id, next) => {
     try {
         console.log('ID -----', id);
-        await cloudinary.uploader.destroy(id, result => {
+        await cloudinary.uploader.destroy(id, { resource_type: "image" }, result => {
             console.log(result);
             return true;
         });
