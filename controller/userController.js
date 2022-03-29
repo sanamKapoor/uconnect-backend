@@ -32,6 +32,8 @@ exports.getUser = async (req, res, next) => {
             return next(error)
         }
 
+        user.posts = await Post.find({ creator: req.params.userId });
+
         res.status(200).json({ msg: 'User', user })
     } catch (error) {
         return next(new HttpError('Server Error', 500))
