@@ -34,7 +34,7 @@ exports.getUser = async (req, res, next) => {
 
         const posts = await Post.find({ creator: req.params.userId });
 
-        res.status(200).json({ msg: 'User', user: { ...user, posts } })
+        res.status(200).json({ msg: 'User', user: { ...user._doc, posts } })
     } catch (error) {
         return next(new HttpError('Server Error', 500))
     }
