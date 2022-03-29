@@ -23,12 +23,6 @@ const userSchema = new mongoose.Schema({
     profession: String,
     bio: String,
     location: String,
-    posts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Post'
-        }
-    ],
     connections: [
         {
             type: mongoose.Schema.Types.ObjectId,

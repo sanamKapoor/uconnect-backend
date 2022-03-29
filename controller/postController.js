@@ -120,8 +120,6 @@ exports.createPost = async (req, res, next) => {
             creator: user
         });
         await post.save();
-        await user.posts.push(post);
-        await user.save();
 
         res.status(201).json({ msg: 'Post Created' })
     } catch (error) {
@@ -219,11 +217,6 @@ exports.deletePost = async (req, res, next) => {
         if(post.mediaFile.mediaId) await destroyMedia(post.mediaFile.mediaId, next);
         
         await post.remove();
-
-        const creator = await User.findById(userId);
-        let removeIndex = creator.posts.map(u => u.toString()).indexOf(postId);
-        creator.posts.splice(removeIndex, 1);
-        await creator.save();
 
         io.getIO().emit('posts', { action: 'GetAllPosts', creator: creator })
         res.status(200).json({ msg: 'Post Deleted'})
