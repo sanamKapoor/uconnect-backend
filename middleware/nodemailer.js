@@ -19,6 +19,7 @@ exports.sendEmailUsingNodemailer = async (mailOptions) => {
     try {
         let mail = await transport.sendMail(mailOptions); 
     } catch (error) {
+        console.log(error);
         throw new HttpError('Something went wrong', 500)
     }
 }
