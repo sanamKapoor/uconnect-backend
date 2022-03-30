@@ -34,8 +34,8 @@ router.post('/register',
 ],
 register)
 
-// router.post('/email-active', accountVerification);
-// router.post('/forgetPassword', forgetPassword);
-// router.post('/resetPassword', resetPassword);
+router.post('/email-active', accountVerification);
+router.post('/forgetPassword', forgetPassword);
+router.post('/resetPassword', resetPassword);
 
 module.exports = router;
