@@ -221,6 +221,7 @@ exports.deletePost = async (req, res, next) => {
         io.getIO().emit('posts', { action: 'GetAllPosts', creator: creator })
         res.status(200).json({ msg: 'Post Deleted'})
     } catch (error) {
+        console.log('err ---------------',errror);
         return next(new HttpError('Server Error', 500))
     }
 }

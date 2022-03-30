@@ -49,7 +49,7 @@ exports.register = async (req, res, next) => {
             subject: 'Account Verification',
             html: `
                 <h2>Hi ${username}</h2>
-                <p>Please click on given link to activate your account for UConnect.</p>
+                <h4>Please click on given link to activate your account for UConnect.</h4>
                 <p>${process.env.CLIENT_URL}/authentication/active/${token}</p>
             `
         };
@@ -110,7 +110,7 @@ exports.forgetPassword = async (req, res, next) => {
             subject: 'Reset Password',
             html: `
                 <h2>Hi ${user.username}</h2>
-                <p>Please click on given link for password reset.</p>
+                <h4>Please click on given link for password reset.</h4>
                 <p>${process.env.CLIENT_URL}/resetPassword/${token}</p>
             `
         };
