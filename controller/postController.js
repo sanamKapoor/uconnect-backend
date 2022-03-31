@@ -218,37 +218,11 @@ exports.deletePost = async (req, res, next) => {
         
         await post.remove();
 
-        const creator = await User.aggregate([
-            {
-                $match: {
-                    _id: userId
-                }
-            },
-            {
-                $lookup: {
-                    from: 'posts',
-                    localField: '_id',
-                    foreignField: 'creator',
-                    as: 'posts'
-                }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    username: 1,
-                    email: 1,
-                    connections: 1,
-                    image: 1,
-                    posts: 1,
-                    imgId: 1,
-                    googleId: 1,
-                    profession: 1,
-                    bio: 1,
-                    location: 1,
-                }
-            }
-        ]);
+        const creator = await User.findById(userId);
+        const posts = await Post.find({ creator });
 
+        creator = { ...creator, posts };
+        
         io.getIO().emit('posts', { action: 'GetAllPosts', creator })
         res.status(200).json({ msg: 'Post Deleted'})
     } catch (error) {
