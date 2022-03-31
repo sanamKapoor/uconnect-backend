@@ -9,8 +9,33 @@ const Post = require('../model/Post');
 //  Get all Users
 exports.getUsers = async (req, res, next) => {
     try {
-        const users = await User.find({}, '-password');
+        // const users = await User.find({}, '-password');
 
+        const users = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'posts',
+                    localField: '_id',
+                    foreignField: 'creator',
+                    as: 'posts'
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    username: 1,
+                    email: 1,
+                    connections: 1,
+                    image: 1,
+                    posts: 1,
+                    imgId: 1,
+                    googleId: 1,
+                    profession: 1,
+                    bio: 1,
+                    location: 1,
+                }
+            }
+        ])
         if(!users || users.length === 0){
             const error = new HttpError("No user found", 404);
             return next(error)
@@ -43,7 +68,36 @@ exports.getUser = async (req, res, next) => {
 //  Get User by Username
 exports.getUserByName = async (req, res, next) => {
     try {
-        const users = await User.find({username: req.params.username}, '-password');
+        const users = await User.aggregate([
+            { 
+                $match: {
+                    username: req.params.username
+                }
+            },
+            {
+                $lookup: {
+                    from: 'posts',
+                    localField: '_id',
+                    foreignField: 'creator',
+                    as: 'posts'
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    username: 1,
+                    email: 1,
+                    connections: 1,
+                    image: 1,
+                    posts: 1,
+                    imgId: 1,
+                    googleId: 1,
+                    profession: 1,
+                    bio: 1,
+                    location: 1,
+                }
+            }
+        ]);
 
         if(!users || users.length === 0){
             const error = new HttpError("No user found", 404);
