@@ -218,11 +218,11 @@ exports.deletePost = async (req, res, next) => {
         
         await post.remove();
 
-        const creator = await User.findById(userId);
-        const posts = await Post.find({ creator });
+        let creator = await User.findById(userId);
+        let posts = await Post.find({ creator });
 
         creator = { ...creator, posts };
-        
+
         io.getIO().emit('posts', { action: 'GetAllPosts', creator })
         res.status(200).json({ msg: 'Post Deleted'})
     } catch (error) {
