@@ -13,6 +13,8 @@ const opt = {
 }
 
 const callBack = async (accessToken, refreshToken, profile, cb) => {
+    console.log('google ------>', profile);
+    
     const newUser = {
         googleId: profile.id,
         email: profile.email,
