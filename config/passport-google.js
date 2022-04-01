@@ -13,11 +13,9 @@ const opt = {
 }
 
 const callBack = async (accessToken, refreshToken, profile, cb) => {
-    console.log('google ------>', profile);
     
     const newUser = {
         googleId: profile.id,
-        email: profile.email,
         username: profile.displayName,
         image: profile.photos[0].value
     }
@@ -25,14 +23,8 @@ const callBack = async (accessToken, refreshToken, profile, cb) => {
     let token;
 
     try {
-        let user = null;
-        user = await User.findOne({ email: profile.email })
-
-        if(user){
-            throw new HttpError('User already exist with this email', 400)
-        }
-
-        user = await User.findOne({ googleId: profile.id })
+        
+        let user = await User.findOne({ googleId: profile.id })
         if(user){
             token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: process.env.EXPIRATION_TIME })
             user.token = token;
