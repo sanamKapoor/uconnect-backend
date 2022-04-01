@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 const User = require('../model/User');
+const HttpError = require('../middleware/error');
 
 const opt = {
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -14,6 +15,7 @@ const opt = {
 const callBack = async (accessToken, refreshToken, profile, cb) => {
     const newUser = {
         googleId: profile.id,
+        email: profile.email,
         username: profile.displayName,
         image: profile.photos[0].value
     }
@@ -21,7 +23,14 @@ const callBack = async (accessToken, refreshToken, profile, cb) => {
     let token;
 
     try {
-        let user = await User.findOne({ googleId: profile.id })
+        let user = null;
+        user = await User.findOne({ email: profile.email })
+
+        if(user){
+            throw new HttpError('User already exist with this email', 400)
+        }
+
+        user = await User.findOne({ googleId: profile.id })
         if(user){
             token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: process.env.EXPIRATION_TIME })
             user.token = token;
