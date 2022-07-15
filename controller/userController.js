@@ -161,7 +161,7 @@ exports.deleteUser = async (req, res, next) => {
         }
 
         //  Delete all my likes and comments on other posts
-        const allPosts = await Post.find();
+        const allPosts = await Post.find({});
         if(allPosts.length > 0){
             for(let post of allPosts){
                 const likeArr = post.likes;
